@@ -1,16 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { useDispatch } from 'react-redux';
+import  {addToCart}  from '../redux/actions/CartActions';
 import productsData from '../data/products.json';
 
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const itemsPerPage = 10;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setProducts(productsData.products);
+    loadMoreItems();
   }, []);
 
+  const loadMoreItems = () => {
+    if (loading) return;
+
+    setLoading(true);
+    const newItems = productsData.products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+    setProducts((prevProducts) => [...prevProducts, ...newItems]);
+    setPage((prevPage) => prevPage + 1);
+    setLoading(false);
+  };
+
   const handleAddToCart = (item) => {
+    dispatch(addToCart(item));
     console.log(`Added ${item.title} to cart`);
+    Alert.alert(`Added ${item.title} to Cart`);
   };
 
   const renderProduct = ({ item }) => (
@@ -35,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backButtonText}>{'< Back'}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Go to Cart')} style={styles.cartButton}>
+        <TouchableOpacity onPress={() => navigation.navigate('CartScreen')} style={styles.cartButton}>
           <Image
             source={require('../assets/trolley.png')} // Adjust path to your cart image
             style={styles.cartImage}
@@ -49,6 +67,9 @@ const HomeScreen = ({ navigation }) => {
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
         contentContainerStyle={styles.flatListContent} // Add contentContainerStyle to adjust padding
+        onEndReached={loadMoreItems}
+        onEndReachedThreshold={0.1}
+        ListFooterComponent={loading ? <Text style={styles.loadingText}>Loading...</Text> : null}
       />
     </View>
   );
@@ -132,7 +153,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   flatListContent: {
-    paddingTop: 30, // Adjust padding based on the size of the back button
+    paddingTop: 30, 
+  },
+  loadingText: {
+    color: '#F9BE21',
+    textAlign: 'center',
+    marginVertical: 20,
   },
 });
 

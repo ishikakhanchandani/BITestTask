@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  Image,
+  Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../reusableComponents/CustomButton';
 import CustomPasswordInput from '../reusableComponents/CustomPasswordInput';
 import CustomTextInput from '../reusableComponents/CustomTextInput';
@@ -16,16 +17,32 @@ const SigninScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const verifyCredentials = () => {
-    navigation.navigate('HomeScreen');
+  const verifyCredentials = async () => {
+    try {
+      const user = await AsyncStorage.getItem('user');
+      if (user !== null) {
+        const parsedUser = JSON.parse(user);
+        console.log('Stored user:', parsedUser); // Debugging log
+        console.log('Entered email:', email); // Debugging log
+        console.log('Entered password:', password); // Debugging log
+        if (parsedUser.email === email && parsedUser.password === password) {
+          await AsyncStorage.setItem('loggedInUser', JSON.stringify(parsedUser));
+          navigation.navigate('HomeScreen');
+        } else {
+          Alert.alert('Invalid credentials');
+        }
+      } else {
+        Alert.alert('User not found');
+      }
+    } catch (error) {
+      Alert.alert('An error occurred during login', error.message);
+    }
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.mainContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>{'< Back'}</Text>
-        </TouchableOpacity>
+        <Text style={{fontSize: 30, color: '#F9BE21', alignSelf: 'center', marginBottom: 30}}>Welcome to ECart</Text>
         <CustomTextInput
           placeholder="Enter your e-mail"
           value={email}
@@ -38,9 +55,6 @@ const SigninScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
         <CustomButton onPress={verifyCredentials} title="Sign in" />
         <View style={styles.orContainer}>
           <View style={styles.divider} />
@@ -68,13 +82,6 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 18,
     color: '#F9BE21',
-  },
-  imageContainer: {
-    width: 200,
-    height: 200,
-    alignSelf: 'center',
-    marginBottom: 50,
-    borderRadius: 10,
   },
   mainContainer: {
     flex: 1,
@@ -118,20 +125,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: 16,
     color: '#F9BE21',
-  },
-  socialLoginImge: {
-    width: 30,
-    height: 30,
-  },
-  socialLoginImgContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  socialLoginBtn: {
-    borderColor: '#F9BE21',
-    borderWidth: 0.8,
-    borderRadius: 2,
-    margin: 10,
   },
 });
 
