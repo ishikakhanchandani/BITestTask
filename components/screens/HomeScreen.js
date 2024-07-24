@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { useDispatch } from 'react-redux';
+import  {addToCart}  from '../redux/actions/CartActions';
 import productsData from '../data/products.json';
 
 const HomeScreen = ({ navigation }) => {
@@ -7,6 +9,7 @@ const HomeScreen = ({ navigation }) => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const itemsPerPage = 10;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     loadMoreItems();
@@ -23,7 +26,9 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleAddToCart = (item) => {
+    dispatch(addToCart(item));
     console.log(`Added ${item.title} to cart`);
+    Alert.alert(`Added ${item.title} to Cart`);
   };
 
   const renderProduct = ({ item }) => (
@@ -48,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backButtonText}>{'< Back'}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Go to Cart')} style={styles.cartButton}>
+        <TouchableOpacity onPress={() => navigation.navigate('CartScreen')} style={styles.cartButton}>
           <Image
             source={require('../assets/trolley.png')} // Adjust path to your cart image
             style={styles.cartImage}
