@@ -2,16 +2,17 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 
 const SplashScreen = ({ navigation }) => {
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         navigation.navigate('IntroScreen1');
-    //     }, 3000);
-    //     return () => clearTimeout(timer);
-    // }, []);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            navigation.navigate('SigninScreen');
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <View style={styles.container}>
             <Image source={require('../assets/trolley.png')} style={styles.image} />
+
         </View>
     );
 };

@@ -100,7 +100,7 @@ const SignUpScreen = ({ navigation }) => {
         <CustomButton onPress={validateAndRegister} title="Sign Up" />
         <View style={styles.innerContainer}>
           <Text style={styles.loginText}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('CustomerSigninScreen')}>
+          <TouchableOpacity onPress={() => navigation.navigate('SigninScreen')}>
             <Text style={styles.loginBtn}>Sign in here</Text>
           </TouchableOpacity>
         </View>
