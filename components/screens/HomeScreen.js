@@ -10,7 +10,6 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const handleAddToCart = (item) => {
-    // Handle add to cart logic here
     console.log(`Added ${item.title} to cart`);
   };
 
