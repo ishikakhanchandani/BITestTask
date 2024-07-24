@@ -5,6 +5,7 @@ import SignUpScreen from "./components/screens/SignupScreen";
 import SplashScreen from "./components/screens/SplashScreen";
 import HomeScreen from "./components/screens/HomeScreen";
 import CartScreen from "./components/screens/CartScreen";
+import CheckoutScreen from "./components/screens/CheckoutScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import store from "./components/redux/Store";
 
@@ -20,6 +21,7 @@ function App(){
           <Stack.Screen name="SignupScreen" component={SignUpScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="CartScreen" component={CartScreen} />
+          <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
          </Stack.Navigator>
     </NavigationContainer>
     </Provider>

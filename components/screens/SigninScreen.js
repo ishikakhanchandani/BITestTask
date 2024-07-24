@@ -42,9 +42,7 @@ const SigninScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.mainContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>{'< Back'}</Text>
-        </TouchableOpacity>
+        <Text style={{fontSize: 30, color: '#F9BE21', alignSelf: 'center', marginBottom: 30}}>Welcome to ECart</Text>
         <CustomTextInput
           placeholder="Enter your e-mail"
           value={email}
@@ -57,9 +55,6 @@ const SigninScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
         <CustomButton onPress={verifyCredentials} title="Sign in" />
         <View style={styles.orContainer}>
           <View style={styles.divider} />
