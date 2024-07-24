@@ -17,7 +17,7 @@ const SigninScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const verifyCredentials = () => {
-    
+    navigation.navigate('HomeScreen');
   };
 
   return (
@@ -49,7 +49,7 @@ const SigninScreen = ({ navigation }) => {
         </View>
         <View style={styles.innerContainer}>
           <Text style={styles.registerText}>Don't have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('CustomerSignupScreen')}>
+          <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')}>
             <Text style={styles.registerBtn}> Sign up</Text>
           </TouchableOpacity>
         </View>
