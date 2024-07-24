@@ -7,8 +7,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
-  Image,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../reusableComponents/CustomButton';
 import CustomPasswordInput from '../reusableComponents/CustomPasswordInput';
 import CustomTextInput from '../reusableComponents/CustomTextInput';
@@ -29,20 +29,33 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
-  const validateAndRegister = () => {
+  const validateAndRegister = async () => {
     if (password !== confirmPassword) {
       Alert.alert('Passwords do not match');
       return;
     }
-    // Perform your registration logic here
-    navigation.navigate('Phone Verification');
+
+    if (!name || !phone || !email || !gender || !password) {
+      Alert.alert('Please fill all the fields');
+      return;
+    }
+
+    try {
+      const user = { name, phone, email, gender, password };
+      console.log('User to be stored:', user); // Debugging log
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+      Alert.alert('Signup Successful!');
+      navigation.navigate('SigninScreen');
+    } catch (error) {
+      Alert.alert('An error occurred during signup', error.message);
+    }
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.mainContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>{`< Back`}</Text>
+          <Text style={styles.backButtonText}>{'< Back'}</Text>
         </TouchableOpacity>
         <CustomTextInput
           placeholder="Name"
@@ -123,6 +136,9 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: 'black',
   },
+  inputContainer: {
+    marginBottom: 20,
+  },
   backButton: {
     position: 'absolute',
     top: 16,
@@ -132,9 +148,6 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 18,
     color: '#F9BE21',
-  },
-  inputContainer: {
-    marginBottom: 16,
   },
   label: {
     fontSize: 18,
@@ -148,27 +161,34 @@ const styles = StyleSheet.create({
   genderOption: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  checkBox: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    padding: 10,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#F9BE21',
-    marginRight: 10,
-  },
-  checked: {
-    backgroundColor: '#F9BE21',
     borderColor: '#F9BE21',
   },
   genderText: {
+    marginLeft: 10,
     fontSize: 16,
     color: '#F9BE21',
   },
+  checkBox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#F9BE21',
+    borderRadius: 5,
+  },
+  checked: {
+    backgroundColor: '#F9BE21',
+  },
+  selected: {
+    borderColor: '#F9BE21',
+  },
   innerContainer: {
     flexDirection: 'row',
-    marginTop: 16,
+    alignSelf: 'center',
     justifyContent: 'center',
+    marginBottom: 16,
   },
   loginText: {
     fontSize: 16,

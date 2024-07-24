@@ -4,10 +4,23 @@ import productsData from '../data/products.json';
 
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const itemsPerPage = 10;
 
   useEffect(() => {
-    setProducts(productsData.products);
+    loadMoreItems();
   }, []);
+
+  const loadMoreItems = () => {
+    if (loading) return;
+
+    setLoading(true);
+    const newItems = productsData.products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+    setProducts((prevProducts) => [...prevProducts, ...newItems]);
+    setPage((prevPage) => prevPage + 1);
+    setLoading(false);
+  };
 
   const handleAddToCart = (item) => {
     console.log(`Added ${item.title} to cart`);
@@ -49,6 +62,9 @@ const HomeScreen = ({ navigation }) => {
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
         contentContainerStyle={styles.flatListContent} // Add contentContainerStyle to adjust padding
+        onEndReached={loadMoreItems}
+        onEndReachedThreshold={0.1}
+        ListFooterComponent={loading ? <Text style={styles.loadingText}>Loading...</Text> : null}
       />
     </View>
   );
@@ -132,7 +148,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   flatListContent: {
-    paddingTop: 30, // Adjust padding based on the size of the back button
+    paddingTop: 30, 
+  },
+  loadingText: {
+    color: '#F9BE21',
+    textAlign: 'center',
+    marginVertical: 20,
   },
 });
 
